@@ -2,12 +2,12 @@
 name: claude-x-jev
 description: Fast, cheap, typed decisions for Claude Code through Jev, TypeSafe's decision model on OpenRouter. Jev sorts, checks, scores, gates and verifies at 0.3 seconds and a fraction of a cent per item, with a confidence number on every answer; Claude keeps the reading, writing and judgment. Use when the user says "jev", "/jev", "/jev-setup", "/jev-classify", "/jev-check", "/jev-score", "/jev-route", "/jev-verify", "/jev-gate", "/jev-match", "/jev-tune", "/jev-lint", "/jev-bench", "/jev-watch", "/jev-status", "classify these", "sort my inbox", "triage these comments", "qualify these leads", "score these", "is this safe to run", "gate tool calls", "verify this draft", "are these the same company", "which threshold", "jev vs claude", "decision model", "openrouter decisions", or wants to run a yes/no, pick-one, or rate-on-a-scale question over many items without spending a Claude session on each one.
 type: standalone
-version: 0.1.0
+version: 0.1.1
 category: operations
 configured: false
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, WebFetch, AskUserQuestion, Skill, Task]
 metadata:
-  version: 0.1.0
+  version: 0.1.1
   author: Charles J Dove
   homepage: https://www.charlieautomates.com/
   repo: https://github.com/charlesdove977/claude-x-jev

@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/charlesdove977/claude-x-jev/main/docs/hero-claude-x-jev.png" alt="Claude x Jev" width="360">
+  <img src="https://raw.githubusercontent.com/charlesdove977/claude-x-jev/main/docs/hero-claude-x-jev-16x9.png" alt="Claude x Jev" width="720">
 </p>
 
 # Claude x Jev
 
-> **Fast, cheap, typed decisions for [Claude Code](https://claude.ai/code).** Jev sorts, checks, scores, gates and verifies at 0.3 seconds and a fraction of a cent per item, with a confidence number on every answer. Claude keeps the reading, the writing and the judgment.
+> **Jev sorts. Claude writes.** Jev is a tiny AI that makes one decision at a time, in a third of a second, for a fraction of a cent, and tells you how sure it is. Claude reads, thinks, and writes. This free [Claude Code](https://claude.ai/code) skill puts the two together so Claude only reads what needs a real brain.
 
 <p>
   <a href="https://start.ccstrategic.io/skool"><img src="https://img.shields.io/badge/Free_Skool_Community-Join_C%26C_Strategic-D97757?style=for-the-badge" alt="Join the free Skool community"></a>
@@ -30,83 +30,85 @@ npx claude-x-jev install --with-commands
 Restart Claude Code, then:
 
 ```
-/jev-setup        once: OpenRouter key, one live call, done
+/jev-setup        once: one OpenRouter key, one live test call
 /jev-classify     sort anything
 /jev-route        Jev pre-sorts, Claude reads only the unsure ones
-/jev-gate         a 0.3s safety check in front of tool calls
+/jev-gate         a 0.3 second safety check in front of tool calls
 ```
 
-Needs `python3` (3.8+) and an [OpenRouter](https://openrouter.ai) API key. No other dependencies. Five dollars of OpenRouter credit covers hundreds of thousands of decisions.
+You need `python3` (3.8 or newer) and an [OpenRouter](https://openrouter.ai) API key. Nothing else. Five dollars of credit covers hundreds of thousands of decisions.
 
 ---
 
-## What Jev is
+## What Jev is, in plain words
 
-[Jev](https://openrouter.ai/typesafe/jev-1.13) is a **decision model** from [TypeSafe](https://typesafe.ai), served on OpenRouter. It is not a chat model. You do not prompt it and read prose back. You hand it a piece of text plus a fixed set of choices, and it hands back a **typed answer with probabilities**:
+[Jev](https://openrouter.ai/typesafe/jev-1.13) is made by [TypeSafe](https://typesafe.ai) and lives on OpenRouter. It is not a chat model. You do not prompt it and read a paragraph back.
 
-| Primitive | You ask | You get back |
+You hand it a piece of text and a fixed set of choices. It hands back a pick, a probability for every choice, and a confidence number. It answers three kinds of questions:
+
+| Question type | You ask | You get back |
 | --- | --- | --- |
 | `choice` | Which one of these? | the label, a probability per label, a confidence |
-| `noul` | Does this hold? | a probability of yes |
-| `score` | Where on this ordered scale? | a weighted position, a probability per level, a confidence |
+| `noul` | Is this true? | a number from 0 to 1 |
+| `score` | Where on this scale? | a position, a probability per level, a confidence |
 
-That is the whole model. It answers in about 300 milliseconds, output tokens are free, input costs about $0.04 per million tokens, and it gives the same answer to the same input every time. It cannot write a sentence. It cannot explain itself. It can tell you, on every single answer, how sure it is.
-
-This skill puts Jev in front of Claude as the sorter.
+That is the whole model. It answers in about a third of a second. Input costs about 4 cents per million tokens. Output is free. Same input, same answer, every time. It cannot write a sentence. It cannot explain itself. It can tell you, on every answer, how sure it is.
 
 ---
 
 ## What Jev does better than Claude
 
-We gave both models the same 216 real inbound emails, the same four questions, the same label definitions.
+I gave both models the same 216 real emails from my inbox, the same four questions, and the same label definitions.
 
 | | Jev 1.13 | Claude Opus 5.5 |
 | --- | --- | --- |
-| Per email | **0.3 s** | 1.3 s (batched 24 at a time) |
-| All 216 | **65 s single file · ~6 s in parallel** | 37 s in 9 parallel batches · 4 min 46 s sequential |
+| Per email | **0.3 s** | 1.3 s (24 at a time) |
+| All 216 | **65 s one at a time, about 6 s in parallel** | 37 s in 9 parallel batches, 4 min 46 s one after another |
 | Cost | **$0.01** | $4.73 |
 | Same answer twice | **Always** | Usually |
 | Says how sure it is | **Every answer** | Only if asked |
 | Runs outside Claude Code | **Yes: cron, n8n, a hook, a script** | Needs a session |
 
-They agreed on 87 to 94 percent of labels. The number that matters more: **when Jev's confidence was 0.7 or higher (82 percent of the inbox), it matched Claude 95.5 percent of the time. Below that, 47 percent, and Jev flagged every one.** It knows when it does not know.
+They agreed on 87 to 94 percent of the labels. The number that matters more:
 
-- **400x cheaper, and it never touches your Claude usage window or context.**
-- **Deterministic.** No drift between runs, no mood.
-- **Calibrated.** The confidence number is a real routing switch, not decoration.
-- **Cannot hallucinate.** It has no prose to hallucinate with. On four of the 28 disagreements Claude saw deals that were not there (a debate-club invite became "brand deal, budget stated"). Jev did not.
+**When Jev said it was at least 70 percent sure (82 percent of the inbox), it matched Claude 95.5 percent of the time. When it was less sure, only 47 percent. And it told us which ones were which.**
+
+- **400 times cheaper.** And it never touches your Claude usage window or your context.
+- **No drift.** Same answer every run.
+- **A real confidence number.** That number is your routing switch.
+- **It cannot make things up.** It has no words to make them up with. On four of the 28 disagreements Claude saw deals that were not there. A debate-club invite became "brand deal, budget stated." Jev did not fall for it.
 
 ## What Claude does better
 
-- **Writing.** Every draft, reply, summary, explanation. Jev returns zero words.
-- **Filling gaps in your definitions.** Claude used playbook knowledge it was never given. Jev used the words it was given, literally. Eight of the 28 disagreements were affiliate-only offers that our label text technically excluded. Claude was right; the fix was one sentence in the label.
-- **Reasoning across questions.** On one email Jev said `vendor_pitch` and `affiliate_only` and `92% they will pay`. Nothing inside Jev reconciles those. Claude does it in its head; this skill does it with a `rules` block in the preset.
-- **Memory and context.** Claude can know the same brand arrived through five agencies, or that a rate was quoted last month. Jev sees one request.
-- **Applying a playbook.** Relationship holds, rate cards, tone. Jev checks one condition at a time; it cannot read a policy and act on it.
+- **Writing.** Every draft, reply, summary, and explanation. Jev returns zero words.
+- **Filling gaps in your labels.** Claude used knowledge it was never given. Jev used exactly the words it was given. Eight of the 28 disagreements were affiliate offers that my label text technically excluded. Claude was right. The fix was one sentence in the label.
+- **Connecting answers.** Jev answers each question alone. One email came back as `vendor_pitch` and `affiliate_only` and `92% likely to pay` at the same time. Claude sorts that out in its head. This skill sorts it out with a `rules` block in the preset.
+- **Memory.** Claude can know the same brand came in through five agencies, or that you quoted a price last month. Jev sees one request.
+- **Following a playbook.** Rate cards, tone rules, relationship holds. Jev checks one condition at a time. It cannot read a policy and act on it.
 
-**The division:** Jev sorts, checks, scores, gates, verifies. Claude reads the unsure slice and writes everything. A person approves what ships.
+**The split:** Jev sorts, checks, scores, gates, and verifies. Claude reads the unsure slice and writes everything. A person approves what ships.
 
 ---
 
-## Commands
+## The 13 commands
 
-| Command | What it does | Primitive |
+| Command | What it does | Question type |
 | --- | --- | --- |
-| `/jev-setup` | OpenRouter key in place, one live call verified, model pinned | |
-| `/jev-status` | Credits, uptime, latency, one live ping, cost estimate for a batch | |
+| `/jev-setup` | Key in place, one live call verified, model pinned | |
+| `/jev-status` | Credits, uptime, latency, and a cost estimate for a batch | |
 | `/jev-classify` | Pick-one labels over many items, with confidence | `choice` |
-| `/jev-check` | Yes/no probability over many items | `noul` |
-| `/jev-score` | Rank items on an ordered scale you define | `score` |
+| `/jev-check` | Yes or no over many items | `noul` |
+| `/jev-score` | Rank items on a scale you define | `score` |
 | `/jev-route` | Jev labels everything; sure items act by label, unsure items go to Claude with full text | `choice` + threshold |
-| `/jev-verify` | Check Claude's drafts against their source thread and your rules before sending | `choice` + `noul` |
-| `/jev-gate` | Approve, block, or escalate a tool call; installable as a Claude Code PreToolUse hook | `noul` |
-| `/jev-match` | Pairwise "same company / same ask?" to collapse duplicate threads | `noul` |
-| `/jev-tune` | Pick the confidence threshold from labelled results (coverage vs precision table) | |
+| `/jev-verify` | Check Claude's drafts against the thread and your rules before sending | `choice` + `noul` |
+| `/jev-gate` | Approve, block, or escalate a tool call; installs as a PreToolUse hook | `noul` |
+| `/jev-match` | Are these two threads the same company? Collapse duplicates | `noul` |
+| `/jev-tune` | Pick the confidence threshold from items a person checked | |
 | `/jev-lint` | Catch vague labels, missing catch-alls, and contradicting answers before you spend | |
-| `/jev-bench` | Jev vs Claude on your own data: agreement, cost, time, disagreements read by hand | |
-| `/jev-watch` | Run a preset on cron, launchd, or n8n with no Claude session open | |
+| `/jev-bench` | Jev vs Claude on your own data: agreement, cost, time, disagreements | |
+| `/jev-watch` | Run a preset on cron, launchd, or n8n with nobody at the keyboard | |
 
-Every command goes through one file, `skill/scripts/jev.py` (stdlib only), which you can also call directly:
+Every command goes through one file, `skill/scripts/jev.py`. No dependencies. You can call it straight from a terminal too:
 
 ```bash
 python3 ~/.claude/skills/claude-x-jev/scripts/jev.py status
@@ -121,19 +123,19 @@ python3 ~/.claude/skills/claude-x-jev/scripts/jev.py tune  --results labels.json
 ## How to use it
 
 ### 1. Set up (two minutes)
-`/jev-setup`. It tells you where to get the key (openrouter.ai → Settings → Keys), where to put it (`export OPENROUTER_API_KEY=...` in your shell profile), and proves it with one live call that costs a hundredth of a cent. The key is never pasted into chat and never written into the skill.
+Run `/jev-setup`. It tells you where to get the key (openrouter.ai, then Settings, then Keys), where to put it (`export OPENROUTER_API_KEY=...` in your shell profile), and proves it with one live call that costs a hundredth of a cent. The key is never pasted into chat and never written into the skill.
 
 ### 2. Sort something
-`/jev-classify`. Pick a bundled preset or describe your labels and it writes one. It lints the preset, dry-runs one item so you see exactly what leaves your machine, runs five so you can eyeball them, then runs the batch. You get a JSONL or CSV with a label, a confidence, and the probabilities per item, plus one summary line: items, seconds, cost.
+Run `/jev-classify`. Pick a bundled preset or describe your labels and it writes one. It lints the preset, dry-runs one item so you see exactly what leaves your machine, runs five so you can check them, then runs the batch. You get a JSONL or CSV file with a label, a confidence, and the probabilities for every item, plus one summary line: items, seconds, cost.
 
 ### 3. Put Jev in front of Claude
-`/jev-route`. Same run, but the output is split: `sorted.sure.jsonl` (act on these by label) and `sorted.unsure.items.jsonl` (Claude reads only these, with their full text). On the benchmark inbox that meant Claude read 38 emails instead of 216, for about 85 cents instead of $4.73.
+Run `/jev-route`. Same run, but the output is split: `sorted.sure.jsonl` (act on these by label) and `sorted.unsure.items.jsonl` (Claude reads only these, with their full text). On my inbox that meant Claude read 38 emails instead of 216, for about 85 cents instead of $4.73.
 
 ### 4. Check Claude's work
-`/jev-verify`. One item per draft: the thread it answers, your rules, the draft. Jev returns `supported / unsupported / declined` plus rule and tone checks. One failed check bounces the draft back to Claude. Nothing sends.
+Run `/jev-verify`. One item per draft: the thread it answers, your rules, the draft. Jev returns `supported`, `unsupported`, or `declined`, plus rule and tone checks. One failed check bounces the draft back to Claude. Nothing sends.
 
 ### 5. Gate tool calls
-`/jev-gate`. Two conditions per call, is it reversible and does it serve the task. Start in shadow mode (nothing auto-allowed, dangerous things still denied), read the log for a few days, then go live at 0.9. On any error the hook prints nothing and exits 0, so Claude Code's own permission prompt stays exactly as it was. It can fail closed to a human; it can never fail open.
+Run `/jev-gate`. Two questions per call: can this be undone, and does it serve the task. Start in shadow mode (nothing is auto-allowed, dangerous things are still denied), read the log for a few days, then go live at 0.9. If anything errors, the hook prints nothing and exits 0, so Claude Code's own permission prompt shows as usual. It can fail closed to a human. It can never fail open.
 
 ```bash
 npx claude-x-jev hook --write      # merges the PreToolUse entry into ~/.claude/settings.json, backup kept
@@ -141,13 +143,13 @@ export JEV_GATE_APPROVE=1.01       # shadow mode: nothing can reach 1.01, so not
 ```
 
 ### 6. Tune, then automate
-`/jev-tune` sweeps thresholds against items a person checked and prints coverage and precision at each. `/jev-watch` writes a runner for cron, launchd, or n8n so the sorting happens with nobody at the keyboard.
+`/jev-tune` sweeps thresholds against items a person checked and prints coverage and precision at each one. `/jev-watch` writes a runner for cron, launchd, or n8n so the sorting happens with nobody at the keyboard.
 
 ---
 
 ## Presets
 
-A preset is one JSON file: the questions, the criteria per label, the confidence bars, and the rules that reconcile answers with each other. Six generic ones ship in `skill/presets/`:
+A preset is one JSON file: the questions, what each label means, the confidence bars, and the rules that connect answers to each other. Six generic ones ship in `skill/presets/`:
 
 | Preset | Sorts | Questions |
 | --- | --- | --- |
@@ -158,9 +160,9 @@ A preset is one JSON file: the questions, the criteria per label, the confidence
 | `tool-gate` | Agent tool calls | reversible · serves task |
 | `match-entity` | Pairs of threads | same entity · same ask |
 
-They are examples. Copy one to `~/.claude/jev-presets/`, rewrite the criteria for your data, run `/jev-lint`. Updates overwrite the bundled folder and never touch yours.
+They are examples. Copy one to `~/.claude/jev-presets/`, rewrite the labels for your data, run `/jev-lint`. Updates overwrite the bundled folder and never touch yours.
 
-**The criteria text is the model.** There is no system prompt to rescue a vague label. `frameworks/criteria-writing.md` has the eight rules; `/jev-lint` enforces the floor.
+**The label text is the model.** There is no system prompt to rescue a vague label. `frameworks/criteria-writing.md` has the eight rules. `/jev-lint` enforces the floor.
 
 ---
 
@@ -179,21 +181,37 @@ skill/
 └── context/install.md    the only file setup writes: status, model pin, key location (never the key)
 ```
 
-Built to the Skillsmith skill spec: XML task steps, frameworks with anti-patterns and sources, templates with `{variable}` and `[prose]` placeholders.
-
 ---
 
 ## One thing to know
 
-Jev lives at `POST https://openrouter.ai/api/alpha/decisions`, outside the `/api/v1` prefix. Send it to the chat endpoint (including through the OpenRouter MCP's chat tool) and you get HTTP 400: *"is a decisions model and cannot be used with the chat/completions endpoint."* This skill never does that. The MCP is still useful for credits, uptime and docs, and `/jev-setup` offers it as optional.
+Jev lives at `POST https://openrouter.ai/api/alpha/decisions`, outside the `/api/v1` path. Send it to the chat endpoint (including through the OpenRouter MCP's chat tool) and you get HTTP 400: *"is a decisions model and cannot be used with the chat/completions endpoint."* This skill never does that. The MCP is still handy for credits, uptime, and docs, and `/jev-setup` offers it as optional.
 
 ---
 
+## Build your own skill like this
+
+This skill was scaffolded with **SkillSmith** and then filled in by hand. SkillSmith is a Claude Code plugin that turns a workflow into a proper skill folder (entry point, tasks, frameworks, templates, checklists) in minutes. If you want to package your own workflow the same way:
+
+- [SkillSmith on GitHub](https://github.com/ChristopherKahler/skillsmith), the plugin itself
+- [SkillSmith walkthrough](https://www.charlieautomates.com/free-resources/#skillsmith), how I use it
+- [EZ Thumb](https://github.com/charlesdove977/ez-thumb), another skill built the same way, with the same installer pattern
+- [BASE](https://github.com/ChristopherKahler/base), the knowledge graph where the rules behind these presets live
+
+## Resources
+
+- [Jev on OpenRouter](https://openrouter.ai/typesafe/jev-1.13), the model page with pricing and uptime
+- [OpenRouter's Jev guide and cookbooks](https://openrouter.ai/docs/guides/community/jev): classification, verified cascade, tool-call gating, auto-approving permission prompts
+- [TypeSafe docs: the three question types](https://docs.typesafe.ai/primitives) and [reading confidence](https://docs.typesafe.ai/confidence)
+- [Jev AI: cheap first-pass sorting before Claude](https://www.charlieautomates.com/free-resources/#jev-first-pass), the write-up on the model itself
+- [Claude x Jev write-up](https://www.charlieautomates.com/free-resources/#claude-x-jev) on charlieautomates.com
+- [Free Skool community](https://start.ccstrategic.io/skool) for questions, results, and presets worth sharing
+
 ## Credits
 
-- **Jev** is built by [TypeSafe](https://typesafe.ai) and served by [OpenRouter](https://openrouter.ai). Their [Jev docs](https://openrouter.ai/docs/guides/community/jev) and cookbooks (classification, verified cascade, tool-call gating, auto-approving permission prompts) shaped the patterns here.
+- **Jev** is built by [TypeSafe](https://typesafe.ai) and served by [OpenRouter](https://openrouter.ai).
 - The benchmark numbers come from a 216-email run on 2026-09-25. Reproduce them on your own inbox with `/jev-bench`.
-- Built by [Charles J Dove](https://www.charlieautomates.com/). Questions, results, and presets worth sharing: the free community at [start.ccstrategic.io/skool](https://start.ccstrategic.io/skool).
+- Built by [Charles J Dove](https://www.charlieautomates.com/).
 
 ## License
 

@@ -1,6 +1,6 @@
 {
   "name": "claude-x-jev",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Fast, cheap, typed decisions for Claude Code. Jev (TypeSafe's decision model on OpenRouter) sorts, checks, scores, gates and verifies at 0.3s and a fraction of a cent per item, with a confidence number on every answer. Claude keeps the reading, writing and judgment. 13 commands, 6 presets, one zero-dependency script, a PreToolUse gate hook.",
   "keywords": [
     "claude-code",

@@ -1,0 +1,71 @@
+{
+  "name": "email-triage",
+  "description": "Sort inbound email by who wants what: a paid deal, a sales pitch aimed at you, a peer collab, or noise.",
+  "model": "typesafe/jev-1.13",
+  "state_fields": [
+    "from",
+    "subject",
+    "body"
+  ],
+  "display_fields": [
+    "from",
+    "subject"
+  ],
+  "questions": {
+    "kind": {
+      "type": "choice",
+      "instructions": "Read `from`, `subject` and `body`. What is the sender trying to get from the recipient? Judge by the direction money would flow.",
+      "criteria": {
+        "paid_deal": "The sender, or the brand they represent, wants to PAY the recipient: sponsorship, paid placement, paid content, paid UGC, or a flat fee. Includes offers that are affiliate-only or free-product-only, because those still come from a brand seeking promotion.",
+        "vendor_pitch": "The sender wants the recipient to buy or pay for a service or tool, or to give up time for a sales call: agencies, editors, designers, lead-gen, software, audits. Money would flow OUT of the recipient.",
+        "peer_collab": "Another creator or operator proposing a non-paid collaboration: guest spot, cross-promo, podcast, joint content.",
+        "non_pitch": "Newsletter, product update, automated notification, calendar invite, receipt, event invite, or mail not written to this recipient."
+      }
+    },
+    "money": {
+      "type": "choice",
+      "instructions": "If this is a paid_deal, what has the sender said about money so far? Otherwise not_applicable.",
+      "criteria": {
+        "asks_rates": "Asks for rates, pricing, a media kit, or availability, and states no budget.",
+        "states_budget": "States a budget, a dollar figure, or a concrete offer amount.",
+        "affiliate_only": "Offers commission, revenue share, referral payout, or free product only, with no flat fee.",
+        "not_applicable": "Not a paid deal, or none of the above is said."
+      }
+    },
+    "pays": {
+      "type": "noul",
+      "instructions": "Does the sender intend to pay the recipient money, as opposed to selling to them or offering nothing?"
+    }
+  },
+  "thresholds": {
+    "kind": 0.7,
+    "money": 0,
+    "pays": {
+      "low": 0.2,
+      "high": 0.8
+    }
+  },
+  "rules": [
+    {
+      "name": "affiliate_is_a_deal",
+      "when": {
+        "money": "affiliate_only"
+      },
+      "set": {
+        "kind": "paid_deal"
+      }
+    },
+    {
+      "name": "high_pay_prob_is_a_deal",
+      "when": {
+        "pays": {
+          "gte": 0.85
+        },
+        "kind": "vendor_pitch"
+      },
+      "set": {
+        "kind": "paid_deal"
+      }
+    }
+  ]
+}

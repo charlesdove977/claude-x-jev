@@ -1,0 +1,40 @@
+{
+  "name": "comment-triage",
+  "description": "Sort social comments: what kind it is, whether it needs a reply, and how much a reply is worth.",
+  "model": "typesafe/jev-1.13",
+  "state_fields": ["author", "text", "video_title"],
+  "display_fields": ["author", "text"],
+  "questions": {
+    "kind": {
+      "type": "choice",
+      "instructions": "Read `text` (a comment under the creator's post titled `video_title`). Which one describes it?",
+      "criteria": {
+        "question": "Asks the creator something that has an answer: how, why, which tool, does it work for X.",
+        "keyword_drop": "Types a single word or short phrase the creator asked viewers to comment to receive a resource, link, or template.",
+        "praise": "Thanks, compliments, or agreement with nothing to answer.",
+        "critique": "Disagrees, points out a mistake, or pushes back on a claim.",
+        "spam": "Promotes an unrelated product, account, or scam, or is bot-like and off-topic.",
+        "other": "Fits none of the above."
+      }
+    },
+    "needs_reply": {
+      "type": "noul",
+      "instructions": "Would a reasonable creator reply to `text`? Yes for questions, keyword drops, and critiques. No for spam and empty praise."
+    },
+    "reply_value": {
+      "type": "score",
+      "instructions": "How much would a reply to `text` be worth to the creator's channel, from lowest to highest?",
+      "criteria": [
+        "Nothing to gain: spam, or a one-word comment with no ask.",
+        "Small: a thank-you reply keeps the commenter warm.",
+        "Medium: a real question other viewers likely share.",
+        "High: a keyword drop or a buying question; a reply converts."
+      ]
+    }
+  },
+  "thresholds": { "kind": 0.7, "needs_reply": { "low": 0.2, "high": 0.8 } },
+  "rules": [
+    { "name": "spam_never_needs_reply", "when": { "kind": "spam" }, "set": { "needs_reply": 0.0 } },
+    { "name": "keyword_drop_always_replies", "when": { "kind": "keyword_drop" }, "set": { "needs_reply": 1.0 } }
+  ]
+}

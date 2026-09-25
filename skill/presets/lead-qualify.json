@@ -1,0 +1,42 @@
+{
+  "name": "lead-qualify",
+  "description": "Qualify an inbound lead from a form or DM: is this a real buyer, how hot, and what do they want.",
+  "model": "typesafe/jev-1.13",
+  "state_fields": ["name", "company", "website", "message", "revenue", "role"],
+  "display_fields": ["name", "company"],
+  "questions": {
+    "real_business": {
+      "type": "noul",
+      "instructions": "Do the fields (`company`, `website`, `message`, `role`) describe a real operating business rather than a student, hobbyist, job seeker, or someone selling to us?"
+    },
+    "decision_maker": {
+      "type": "noul",
+      "instructions": "Does `role` or `message` indicate the person can approve spending for their business (owner, founder, partner, C-level, department head)?"
+    },
+    "heat": {
+      "type": "score",
+      "instructions": "How close is `message` to a buying decision, from coldest to hottest?",
+      "criteria": [
+        "Cold: browsing, asking what we do, no problem named.",
+        "Warm: names a specific problem or goal, no timeline or budget.",
+        "Hot: names a problem AND a timeline, a budget, or asks for a call or price.",
+        "Ready: asks to buy, sign, or start, or states an approved budget."
+      ]
+    },
+    "want": {
+      "type": "choice",
+      "instructions": "What is the lead asking for in `message`?",
+      "criteria": {
+        "done_for_you": "Wants someone to build or run it for them.",
+        "coaching": "Wants to learn to do it themselves with guidance.",
+        "product": "Wants to buy a specific product, tool, or template.",
+        "partnership": "Proposes a partnership, referral, or affiliate arrangement.",
+        "unclear": "Cannot tell from the message."
+      }
+    }
+  },
+  "thresholds": { "real_business": { "low": 0.25, "high": 0.75 }, "heat": 0.6, "want": 0.6 },
+  "rules": [
+    { "name": "not_real_is_cold", "when": { "real_business": { "lte": 0.2 } }, "set": { "heat": 0 } }
+  ]
+}

@@ -1,0 +1,12 @@
+.git/
+.gitignore
+.github/
+.DS_Store
+node_modules/
+*.log
+*.tgz
+.vscode/
+.idea/
+docs/
+__pycache__/
+*.pyc

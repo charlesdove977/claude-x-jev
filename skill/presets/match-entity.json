@@ -1,0 +1,19 @@
+{
+  "name": "match-entity",
+  "description": "Pairwise check: are `a` and `b` about the same company, person, or campaign? For collapsing duplicate threads before anyone drafts twice.",
+  "model": "typesafe/jev-1.13",
+  "state_fields": ["a", "b"],
+  "display_fields": ["_id"],
+  "questions": {
+    "same_entity": {
+      "type": "noul",
+      "instructions": "Do `a` and `b` refer to the same underlying company, brand, person, or campaign, even if they arrive from different senders, agencies, or email addresses?"
+    },
+    "same_ask": {
+      "type": "noul",
+      "instructions": "Are `a` and `b` asking for the same deliverable or the same deal, so that answering one would answer both?"
+    }
+  },
+  "thresholds": { "same_entity": { "low": 0.15, "high": 0.85 } },
+  "rules": []
+}

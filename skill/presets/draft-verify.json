@@ -1,0 +1,57 @@
+{
+  "name": "draft-verify",
+  "description": "Check a generated reply against its source thread and a rule list before it is sent. Jev verifies; Claude wrote.",
+  "model": "typesafe/jev-1.13",
+  "state_fields": [
+    "thread",
+    "rules",
+    "draft"
+  ],
+  "display_fields": [
+    "_id"
+  ],
+  "questions": {
+    "grounded": {
+      "type": "choice",
+      "instructions": "Compare `draft` against `thread` (what the other party said) and `rules` (what the sender's policy says). Which one describes the draft?",
+      "criteria": {
+        "supported": "Every fact, number, price, and commitment in the draft appears in `thread` or `rules`, and the draft answers what the thread actually asked.",
+        "unsupported": "The draft states a fact, number, or commitment found in neither `thread` nor `rules`, or contradicts one of them, or answers a different question than the thread asked.",
+        "declined": "The draft says it cannot answer or defers, and adds no facts of its own."
+      },
+      "exhaustive": true
+    },
+    "follows_rules": {
+      "type": "noul",
+      "instructions": "Does `draft` obey every rule listed in `rules`? A single broken rule means no."
+    },
+    "tone_ok": {
+      "type": "noul",
+      "instructions": "Is `draft` written in a plain, human, professional voice with no hype words, no apology spiral, and no formatting the thread did not use?"
+    }
+  },
+  "thresholds": {
+    "grounded": 0.8,
+    "follows_rules": {
+      "low": 0.1,
+      "high": 0.9
+    },
+    "tone_ok": {
+      "low": 0.2,
+      "high": 0.8
+    }
+  },
+  "rules": [
+    {
+      "name": "broken_rule_is_unsupported",
+      "when": {
+        "follows_rules": {
+          "lte": 0.1
+        }
+      },
+      "set": {
+        "grounded": "unsupported"
+      }
+    }
+  ]
+}

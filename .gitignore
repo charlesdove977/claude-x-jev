@@ -1,0 +1,12 @@
+node_modules/
+.DS_Store
+*.log
+*.tgz
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+
+# Private presets and install state never ship in the repo.
+skill/presets/user/*
+!skill/presets/user/.gitkeep

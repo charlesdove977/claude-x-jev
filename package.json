@@ -1,0 +1,48 @@
+{
+  "name": "claude-x-jev",
+  "version": "0.1.0",
+  "description": "Fast, cheap, typed decisions for Claude Code. Jev (TypeSafe's decision model on OpenRouter) sorts, checks, scores, gates and verifies at 0.3s and a fraction of a cent per item, with a confidence number on every answer. Claude keeps the reading, writing and judgment. 13 commands, 6 presets, one zero-dependency script, a PreToolUse gate hook.",
+  "keywords": [
+    "claude-code",
+    "claude",
+    "skill",
+    "jev",
+    "typesafe",
+    "openrouter",
+    "decision-model",
+    "classification",
+    "triage",
+    "routing",
+    "guardrails",
+    "hooks",
+    "agents",
+    "llm-ops",
+    "cost-optimization"
+  ],
+  "homepage": "https://github.com/charlesdove977/claude-x-jev#readme",
+  "bugs": {
+    "url": "https://github.com/charlesdove977/claude-x-jev/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charlesdove977/claude-x-jev.git"
+  },
+  "license": "MIT",
+  "author": "Charles J Dove (https://www.charlieautomates.com/)",
+  "type": "commonjs",
+  "bin": {
+    "claude-x-jev": "bin/claude-x-jev.js"
+  },
+  "files": [
+    "bin/",
+    "skill/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "test": "node bin/claude-x-jev.js --version && python3 -c \"import ast; ast.parse(open('skill/scripts/jev.py').read())\" && python3 skill/scripts/jev.py lint --preset skill/presets/email-triage.json && echo OK"
+  }
+}

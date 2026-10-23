@@ -19,6 +19,8 @@
 
 **Community:** [start.ccstrategic.io/skool](https://start.ccstrategic.io/skool) (free) · **Site:** [charlieautomates.com](https://www.charlieautomates.com/) · **YouTube:** [@charlieautomates](https://youtube.com/@charlieautomates)
 
+**Want fast, cheap decisions like this set up in your own workflows?** Join [CC Strategic AI +](https://www.skool.com/cc-strategic-ai-plus/about): my 27-day Claude Code mastery program with a 1-click install setup file, and you work with us to land your first AI client in 90 days, or your money back.
+
 ---
 
 ## Install
